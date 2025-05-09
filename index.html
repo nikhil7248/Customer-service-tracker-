@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Issue Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bug"></i> Customer Issue Tracker</h1>
+            <div class="user-controls">
+                <span id="username-display">Welcome, Admin</span>
+                <button id="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Open Issues</h3>
+                    <p id="open-count">24</p>
+                </div>
+                <div class="stat-card">
+                    <h3>In Progress</h3>
+                    <p id="progress-count">12</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Resolved</h3>
+                    <p id="resolved-count">56</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Urgent</h3>
+                    <p id="urgent-count">5</p>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="new-issue-btn" class="btn-primary">
+                    <i class="fas fa-plus"></i> New Issue
+                </button>
+                <div class="filter-controls">
+                    <select id="status-filter">
+                        <option value="all">All Statuses</option>
+                        <option value="open">Open</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                    <select id="priority-filter">
+                        <option value="all">All Priorities</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                    <input type="text" id="search-box" placeholder="Search issues...">
+                </div>
+            </div>
+        </div>
+
+        <div class="issues-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="issues-table-body">
+                    <!-- Issues will be populated here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- New Issue Modal -->
+    <div id="new-issue-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Create New Issue</h2>
+            <form id="new-issue-form">
+                <div class="form-group">
+                    <label for="issue-title">Title*</label>
+                    <input type="text" id="issue-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="issue-description">Description*</label>
+                    <textarea id="issue-description" rows="4" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="issue-customer">Customer*</label>
+                        <input type="text" id="issue-customer" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-email">Email*</label>
+                        <input type="email" id="issue-email" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="issue-priority">Priority*</label>
+                        <select id="issue-priority" required>
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-category">Category</label>
+                        <select id="issue-category">
+                            <option value="bug">Bug</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="question">Question</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Submit Issue</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Issue Detail Modal -->
+    <div id="issue-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="issue-header">
+                <h2 id="detail-title">[Issue Title]</h2>
+                <div class="issue-meta">
+                    <span class="status-badge" id="detail-status">Open</span>
+                    <span class="priority-badge" id="detail-priority">Medium</span>
+                    <span id="detail-id">#123</span>
+                </div>
+            </div>
+            
+            <div class="issue-body">
+                <div class="issue-description">
+                    <h3>Description</h3>
+                    <p id="detail-description">[Issue description goes here]</p>
+                </div>
+                
+                <div class="issue-info">
+                    <div class="info-item">
+                        <h4>Reported By</h4>
+                        <p id="detail-customer">Customer Name</p>
+                        <p id="detail-email">customer@example.com</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Date Reported</h4>
+                        <p id="detail-created">2023-05-15</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Last Updated</h4>
+                        <p id="detail-updated">2023-05-16</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Category</h4>
+                        <p id="detail-category">Bug</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="issue-actions">
+                <select id="status-update">
+                    <option value="open">Open</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                </select>
+                <button id="save-status-btn" class="btn-primary">Update Status</button>
+                <button id="add-comment-btn" class="btn-secondary">Add Comment</button>
+            </div>
+            
+            <div class="issue-comments">
+                <h3>Comments</h3>
+                <div id="comments-container">
+                    <!-- Comments will be added here -->
+                </div>
+                <div class="new-comment" id="new-comment-section" style="display: none;">
+                    <textarea id="comment-text" placeholder="Add your comment..."></textarea>
+                    <button id="submit-comment-btn" class="btn-primary">Submit Comment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
